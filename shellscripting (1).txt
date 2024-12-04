@@ -1,0 +1,463 @@
+.shell scripting: set of commands in a file
+
+.type of languages : interpreted vs Compiled 
+.scan for error and compile 
+
+.Interpreter:scan and run if errored give it or move to next line
+.compilation: scan entier code and compile entier code and give output at the end
+
+.scripting vs programming
+.programming: create something from scratch
+.scripting: automate day to day tasks
+
+.we are learnig Bash shell scripting
+
+.create script.sh or script.bash extentions are allowed .sh,.bash
+
+vim script.sh
+#!/bin/bash
+..this is interpreter (to know this commands are going to run on which shell)
+
+________SHE BANG AND COMMENT_______
+#! is known as shebang
+# is used for comment 
+
+
+echo "hello world"
+mkdir /tmp/dev
+touch /tmp/dev/file1
+echo "hello bob" > /tmp/dev/file1
+:wq
+
+.now any script file needs execute permission in linux
+chmod +x script.sh
+
+./script.sh     #to run script
+
+______VARIABLE________
+
+.variable is nothing but a contianer or place where we save value
+
+ex
+X = 10
+
+.lets use it in script
+
+cat >> script2.sh
+
+#!/bin/bash
+X=10
+echo "value of X is $X"
+
+chmod u+x script2.sh
+
+./script2.sh
+
+to set variable on Terminal 
+use export variable-name="value"
+
+to print echo $varibale-name
+
+.we use $variable to print value of it
+
+.rules to define variable
+.- variable name can start with 
+.small, capital letter or underscore(_)
+
+.- can not start with
+.numbers, special charector apart from _ 
+.name can not have special charector anywhere in name
+
+bob1
+1bob
+bob_1
+_bob1
+1bob_
+bob@1
+
+.demo
+
+.value of variable
+ interger: whole, natural numbers
+ float: deciaml points
+ string: collection of charactors
+
+vim sript3.sh
+
+#!/bin/bash
+x=10
+y=5.5
+course="shellscript"
+
+echo -e " value of x is $x \n value of y is $y \n value of course is $course"
+
+:wq
+
+\n = new line charactors
+\t = add tab where given
+-e option is to stop script from running if it encounters any error
+-e is required if we use extra parameter ex \n
+
+chmod u+x script3.sh
+./script3.sh
+
+________INPUT_________
+
+.we have been giving value to our variable and printing it 
+.now we want to get value from user
+
+vim s1.sh 
+
+#!/bin/bash
+
+echo "value of x:"
+read X
+
+echo "value of y:"
+read Y 
+
+echo "value of course:"
+read course
+
+echo -e " value of x is $X \n value of y is $Y \n value of course is $course"
+
+:wq
+
+chmod u+x s1.sh
+./s1.sh
+
+.how to optimise this code to not write echo multiple times
+
+vim s2.sh
+
+#!/bin/bash 
+read -p "value of x: " x
+read -p "value of y: " y
+read -p "value of course: " course
+
+echo -e " value of x is $x \n value of y is $y \n value of course is $course"
+
+:wq
+
+chmod +x s2.sh
+/.s2.sh
+
+give values and see result
+-p means print
+
+
+.. positional parameter aka command line argument to accept input from user
+
+.. positional parameter
+$0 = script file it self
+$1 = first pos parameter
+$2 = second pos parameter
+
+first argument on command line is script file
+./s4.sh  << so when running on command line the only thing we give is first parameter
+
+
+vim s4.sh
+#!/bin/bash
+
+echo "zero'th positonal parameter is $0"
+echo "1'st positonal parameter is $1"
+:wq
+
+
+./s4.sh abc 123
+> enter name of user:  abc
+> name is abc
+> first positional parameter is s4.sh
+
+.. lets test 1st 2nd and 3rd positional parameter
+
+vim s5.sh
+
+#!/bin/bash
+echo "first positonal parameter with index 0 is $0"
+echo "second positional para with index 1 is $1"
+echo "3rd postional para is $2"
+:wq
+
+./s5.sh abc 123 
+
+>first positional parameter with index 0 is s5.sh
+>second positional para with index 1 is abc
+>3rd positonal para is 123
+
+
+what if we give more inputs in cli than specified inside script
+./s5.sh my name is rob
+
+
+*: print all input
+@: print all input
+#: print the count
+
+vim s6.sh
+
+#!/bin/bash
+echo "print all inputs with * is $*"
+echo "print all inputs with @ is $@"
+echo "print number of input arguments with # is $#"
+
+differance between * and @, is * accepts inputs as single string,
+@ accepts inputs as multiple stings as given in cli
+
+________FUNCTIONS_________
+
+Creating Functions
+
+vim test.sh
+
+#!/bin/sh
+# Define your function here
+Hello () {
+   echo "Hello World" 
+}
+# Invoke your function
+Hello
+
+:wq
+
+Upon execution, you will receive the following output −
+
+$./test.sh
+Hello World
+
+Pass Parameters to a Function
+You can define a function that will accept parameters while calling the function.
+These parameters would be represented by $1, $2 and so on.
+
+Following is an example where we pass two parameters Zara and Ali and then we capture 
+and print these parameters in the function.
+
+DRY 
+
+#!/bin/sh
+
+# Define your function here
+Hello1 () {
+  echo "Hello World $0 $1 $2 $3"
+}
+
+# Invoke your function
+Hello1 Zara Ali hr 
+Hello1 rob bob marketing 
+
+
+Upon execution, you will receive the following result −
+$./test.sh
+Hello World Zara Ali
+
+Returning Values from Functions
+If you execute an exit command from inside a function, its effect is not only to terminate 
+execution of the function but also of the shell program that called the function.
+
+If you instead want to just terminate execution of the function,
+then there is way to come out of a defined function.
+
+Based on the situation you can return any value from your function using the return command
+whose syntax is as follows −
+
+return code
+Here code can be anything you choose here, but obviously you should choose something
+that is meaningful or useful in the context of your script as a whole.
+
+Example
+Following function returns a value 10 −
+
+ Live Demo
+#!/bin/sh
+
+# Define your function here
+Hello () {
+   echo "Hello World $1 $2"
+   return 10
+}
+
+# Invoke your function
+Hello Zara Ali
+
+# Capture value returnd by last command
+ret=$?
+
+echo "Return value is $?"
+
+Upon execution, you will receive the following result −
+
+$./test.sh
+Hello World Zara Ali
+Return value is 10
+
+Nested Functions
+One of the more interesting features of functions is that they can call themselves and 
+also other functions. A function that calls itself is known as a recursive function.
+
+Following example demonstrates nesting of two functions −
+
+ Live Demo
+#!/bin/bash
+
+# Calling one function from another
+number_one () {
+   echo "This is the first function speaking..."
+   number_two
+}
+
+number_two () {
+   echo "This is now the second function speaking..."
+}
+
+# Calling function one.
+number_one
+
+
+
+Upon execution, you will receive the following result −
+
+This is the first function speaking...
+This is now the second function speaking...
+
+
+Function Call from cli 
+
+You can group the definitions in a file, say test.sh, and then 
+execute the file in the current shell by typing ". scriptname" 
+
+$. test.sh
+This has the effect of causing functions defined inside test.sh to be read 
+and defined to the current shell as follows "function_name"
+
+$ number_one
+This is the first function speaking...
+This is now the second function speaking...
+
+To remove the definition of a function from the shell, use the unset command with the .f 
+option. This command is also used to remove the definition of a variable to the shell.
+
+$ unset -f function_name
+
+
+________LOOP_________
+
+every language has concept of loop, shell script has two types of looping,
+for and while
+
+DRY principal (DO NOT REPEATE YOURSELF)
+
+
+____FOR_LOOP___
+
+for loops iterate through a set of values until the list is exhausted:
+
+vi for.sh
+#!/bin/sh
+for i in 1 3 5 7 9
+do
+  echo "Looping ... number $i"
+done
+:wq
+
+
+./for.sh
+Looping .... number 1
+Looping .... number 2
+Looping .... number 3
+Looping .... number 4
+Looping .... number 5
+
+
+vi for2.sh
+#!/bin/sh
+for i in hello 1 * 2 goodbye 
+do
+  echo "Looping ... i is set to $i"
+done
+
+
+output
+./for2.sh
+my name is  hello
+Looping ... i is set to 1
+Looping ... i is set to (name of first file in current directory)
+    ... etc ...
+Looping ... i is set to (name of last file in current directory)
+Looping ... i is set to 2
+Looping ... i is set to goodbye
+
+
+So, for simply loops through whatever input it is given, until it runs out of input.
+
+____WHILE____
+
+vim while.sh
+#!/bin/sh
+INPUT_STRING=hello
+while [ "$INPUT_STRING" != "bye" ]
+do
+  echo "Please type something in (bye to quit)"
+  read INPUT_STRING
+  echo "You typed: $INPUT_STRING"
+done
+
+
+./while.sh
+
+What happens here, is that the echo and read statements will run indefinitely until you type "bye" when prompted.
+
+
+____IF____
+
+if [ ... ]
+then
+  # if-code
+else
+  # else-code
+fi
+
+
+be aware of the syntax - the "if [ ... ]" and the "then" commands must be on different lines.
+Alternatively, the semicolon ";" can separate them
+
+if [ ... ]; then
+  # do something
+fi
+
+an example of elif = else if
+
+#!/bin/bash
+read -p "enter number:" X
+if  [ $X -gt 10 ]; then
+ echo "bigger"
+ elif [ $X -lt 10 ]; then
+   echo "Smaller"
+ else
+   echo "out of range"
+fi
+
+
+____EXITCODE_____
+create a file1
+
+#!/bin/bash
+[ -e ~/file1 ]
+if [ $? == 0 ]; then
+  echo "file exist"
+else
+  echo "file does not exit"
+fi
+
+-e is used to check if file exist 
+
+______Redirector______
+
+> replaces 
+>> 
+appned 
+
+cat >> file
+
+
+
